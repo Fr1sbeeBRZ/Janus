@@ -1,0 +1,4 @@
+# Example of the application properties of the project
+
+spring.application.name=Janus
+server.port=8080

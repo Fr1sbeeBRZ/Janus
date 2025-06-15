@@ -1,0 +1,94 @@
+/* Fondo oscuro con patrón de rejilla sutil */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(160deg, #1e1e2f 0%, #2a2a3d 100%);
+    overflow: hidden;
+    position: relative;
+    color: #fff;
+}
+
+/* Patrón tipo grid (rejilla) */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+            linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+}
+
+/* Contenedor principal */
+main#loginContainer {
+    position: relative;
+    z-index: 1;
+}
+
+/* Formulario */
+form#login {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 2rem;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Asegura que los hijos usen todo el ancho */
+    gap: 1.5rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Campos de texto */
+form label {
+    color: #cfcfe0;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+    display: block;
+}
+
+form input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+}
+
+form input::placeholder {
+    color: #ccc;
+}
+
+form input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Botón de login */
+button[type="submit"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.7rem;
+    background: #a9def9; /* azul pastel */
+    border: none;
+    border-radius: 8px;
+    color: #1e1e2f;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background: #84b9d3; /* verde pastel suave */
+}
