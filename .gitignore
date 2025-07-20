@@ -32,5 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 
-# Excluir los properties
+# Exclude properties files
 *.properties
