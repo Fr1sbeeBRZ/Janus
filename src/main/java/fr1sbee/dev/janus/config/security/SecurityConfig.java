@@ -29,7 +29,7 @@ public class SecurityConfig {
 
                         .anyRequest().authenticated()
                 )
-                .formLogin(security -> security.loginPage("/login").defaultSuccessUrl("/home").permitAll())
+                .formLogin(security -> security.loginPage("/login").defaultSuccessUrl("/home" , true).permitAll())
                 .build();
     }
 
