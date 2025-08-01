@@ -14,7 +14,7 @@ public class CustomUserDetails extends User {
     }
 
     public CustomUserDetails(final Profile profile, final String password, final boolean enabled, final boolean accountNonExpired, final boolean credentialsNonExpired, final boolean accountNonLocked, final Collection<? extends GrantedAuthority> authorities) {
-        super(profile.getUsername(), password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        super(profile.username(), password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         this.profile = profile;
     }
 

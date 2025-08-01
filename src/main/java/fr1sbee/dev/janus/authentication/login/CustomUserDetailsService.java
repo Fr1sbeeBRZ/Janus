@@ -1,5 +1,7 @@
 package fr1sbee.dev.janus.authentication.login;
 
+import fr1sbee.dev.janus.exceptions.UserException;
+import fr1sbee.dev.janus.utils.JanusUtils;
 import fr1sbee.dev.janus.web.database.entities.Authority;
 import fr1sbee.dev.janus.web.database.entities.JanusUser;
 import fr1sbee.dev.janus.web.database.entities.Role;
@@ -13,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.*;
 
 @Service
@@ -27,21 +30,42 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<JanusUser> user = userRepository.findByUsername(username);
+        Optional<JanusUser> optionalUser = userRepository.findByUsername(username);
 
-        return user.map(this::toCustomUserDetails)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+        try {
+            JanusUser user = optionalUser.orElseThrow(() -> new UserException(MessageFormat.format("cannot find user by username {0}" , username)));
+            return createCustomUserDetails(user);
+        } catch (UserException userException) {
+            throw new UsernameNotFoundException(userException.getMessage() ,userException);
+        }
     }
 
 
-    private CustomUserDetails toCustomUserDetails(final JanusUser user) {
+
+    private CustomUserDetails createCustomUserDetails(final JanusUser user) throws UserException {
 
         Set<Role> userRoles = new HashSet<>(userRoleRepository.getUserRoles(user));
 
-        Profile profile = new Profile(user.getUsername() , userRoles);
+        if (userRoles.isEmpty()) {
+            throw new UserException(MessageFormat.format("The user with id {0} is not assigned any role" , user.getId()));
+        }
 
+        Role activeRol = userRoles.stream().
+                filter(Role::isActive)
+                .findFirst()
+                .orElseThrow(() -> new UserException(MessageFormat.format("The user with id {0} does not have any active roles" , user.getId())));
 
-        return new CustomUserDetails(profile , user.getPasswordHash() , getAuthorities(profile.getAuthorities()));
+        Set<String> userRolesOrganized = JanusUtils.orderRolesForProfile(userRoles);
+
+        Profile profile = new Profile(
+                user.getUsername(),
+                userRolesOrganized,
+                activeRol.getAuthorities(),
+                activeRol);
+
+        return new CustomUserDetails(profile,
+                user.getPasswordHash(),
+                getAuthorities(profile.authorities()));
     }
 
     private List<SimpleGrantedAuthority> getAuthorities(Set<Authority> authoritySet) {

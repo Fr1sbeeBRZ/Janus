@@ -1,10 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Home page</title>
 </head>
 <body>
-<h1>HOLA este es el home</h1>
+<header>
+    <p>Cabecera de la pagina</p>
+</header>
+<main>
+    <p>Cuerpo de la pagina</p>
+    <p>Bienvenido <span th:text="${profile.username}"></span> !</p>
+    <p>Rol activo: <span th:text="${profile.activeRol.code}"></span></p>
+    <p>Lista de roles </p>
+
+    <table>
+        <thead>Tabla de roles</thead>
+        <tbody>
+            <tr th:each="rol, iterStat : ${profile.roles}">
+                <td th:text="${iterStat.index + 1}"></td> <!-- índice -->
+                <td th:text="${rol}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+</main>
+<footer>
+    <p>Pie de pagina</p>
+</footer>
 </body>
 </html>
